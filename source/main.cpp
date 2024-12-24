@@ -1,35 +1,54 @@
-// main.cpp
+/*---------------------------------------------------------------------------------
+
+	$Id: main.cpp,v 1.13 2008-12-02 20:21:20 dovoto Exp $
+
+	Simple console print demo
+	-- dovoto
+
+
+---------------------------------------------------------------------------------*/
 #include <nds.h>
+
 #include <stdio.h>
 
-int main() {
-    // Initialize both screens
-    videoSetMode(MODE_0_2D);
-    videoSetModeSub(MODE_0_2D);
+static volatile int frame = 0;
 
-    // Initialize console on bottom screen
-    consoleDemoInit();
+//---------------------------------------------------------------------------------
+// VBlank interrupt handler. This function is executed in IRQ mode - be careful!
+//---------------------------------------------------------------------------------
+static void Vblank() {
+//---------------------------------------------------------------------------------
+	frame++;
+}
 
-    // Set up background for top screen
-    vramSetBankA(VRAM_A_MAIN_BG);
-    PrintConsole topScreen;
-    consoleInit(&topScreen, 3, BgType_Text4bpp, BgSize_T_256x256, 31, 0, true, true);
+//---------------------------------------------------------------------------------
+int main(void) {
+//---------------------------------------------------------------------------------
+	touchPosition touchXY;
 
-    // Print messages
-    consoleSelect(&topScreen);
-    printf("\x1b[10;5HHello from the top screen!");
-    
-    consoleSelect(&consoleDemoInitDefault());
-    printf("\x1b[10;5HHello from the bottom screen!");
+	irqSet(IRQ_VBLANK, Vblank);
 
-    // Main game loop
-    while(1) {
-        swiWaitForVBlank();
-        scanKeys();
-        
-        // Exit if Start button is pressed
-        if(keysDown() & KEY_START) break;
-    }
+	consoleDemoInit();
 
-    return 0;
+	iprintf("      Hello DS dev'rs\n");
+	iprintf("     \x1b[32mwww.devkitpro.org\n");
+	iprintf("   \x1b[32;1mwww.drunkencoders.com\x1b[39m");
+
+	while(pmMainLoop()) {
+
+		swiWaitForVBlank();
+		scanKeys();
+		int keys = keysDown();
+		if (keys & KEY_START) break;
+
+		touchRead(&touchXY);
+
+		// print at using ansi escape sequence \x1b[line;columnH
+		iprintf("\x1b[10;0HFrame = %d",frame);
+		iprintf("\x1b[16;0HTouch x = %04X, %04X\n", touchXY.rawx, touchXY.px);
+		iprintf("Touch y = %04X, %04X\n", touchXY.rawy, touchXY.py);
+
+	}
+
+	return 0;
 }
