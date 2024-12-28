@@ -1,2 +1,2 @@
 # nds-test-app
-A beginner test application to run on Nintendo DS
+A testing application for the Nintendo DS
