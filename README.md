@@ -14,4 +14,4 @@ Listed in order of implementation
 
 List of references used in this project
 
-- [nds-examples](https://github.com/user/repo/blob/branch/other_file.md): code for timers and touchscreen data.
+- [nds-examples](https://github.com/devkitPro/nds-examples): code for timers and touchscreen data.
