@@ -1,6 +1,8 @@
 # nds-test-app
 
-A testing application for the Nintendo DS
+An application for testing and debugging applications for the Nintendo DS.
+
+Feel free to utilze this code in your own applications, just don't forget to credit me 😉 (required by the MIT License).
 
 ## Features
 
