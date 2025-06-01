@@ -4,14 +4,17 @@
             "name": "NDS",
             "includePath": [
                 "${workspaceFolder}",
+                "${workspaceFolder}/**",
                 // "${workspaceFolder}/libs/**",
                 "C:/devkitPro/devkitARM/arm-none-eabi/include/**",
-                // "C:/devkitPro/calico/include/**",
+                "C:/devkitPro/calico/include/**",
+                "C:/devkitpro/libnds/include",
                 "C:/devkitpro/libnds/include/**"
                 // "C:/devkitpro/nitro-engine/include/**",
                 // "C:/devkitpro/nflib/include/**"
             ],
             "defines": [
+                "__nds__",
                 "_DEBUG",
                 "_UNICODE",
                 "WIN32",

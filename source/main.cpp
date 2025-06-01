@@ -46,6 +46,8 @@ int main(void) {
 
 	timerStart(0, ClockDivider_1024, TIMER_FREQ_1024(1), countFPS);
 
+	setBackdropColor(RGB15(255,128,0))
+
 	while(pmMainLoop()) {
 
 		swiWaitForVBlank();
