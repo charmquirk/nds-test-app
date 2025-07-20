@@ -1,76 +1,91 @@
-/*---------------------------------------------------------------------------------
+// SPDX-License-Identifier: Zlib
+//
+// Copyright (C) 2005 Michael Noland (joat)
+// Copyright (C) 2005 Jason Rogers (Dovoto)
+// Copyright (C) 2005-2015 Dave Murphy (WinterMute)
+// Copyright (C) 2023 Antonio Niño Díaz
 
-	$Id: main.cpp,v 1.13 2008-12-02 20:21:20 dovoto Exp $
+// Default ARM7 core
 
-	Simple console print demo
-	-- dovoto
-
-
----------------------------------------------------------------------------------*/
-#include <nds.h>
-
+#include <math.h>
 #include <stdio.h>
 
-static volatile int frame = 0;
-static volatile int fps = 0;
-static volatile int elapsedSeconds = 0;
+#include <dswifi7.h>
+#include <nds.h>
+#include <maxmod7.h>
 
-//---------------------------------------------------------------------------------
-// VBlank interrupt handler. This function is executed in IRQ mode - be careful!
-//---------------------------------------------------------------------------------
-static void Vblank() {
-//---------------------------------------------------------------------------------
-	frame++;
+/*
+Whether or not the app should exit the main loop.
+It is triggered on by opening the app and triggered off by pressing the power button or "Start".
+*/
+volatile bool exit_loop = false; 
+
+/**
+* @brief Callback function fo the power button. Exits the main loop.
+*/
+void power_button_callback(void)
+{
+    exit_loop = true;
 }
 
-static void countFPS() {
-	elapsedSeconds++;
-	fps = frame;
-
-	// Reset for the next second
-	frame = 0;
+void vblank_handler(void)
+{
+    inputGetAndSend();
+    Wifi_Update();
 }
 
-//---------------------------------------------------------------------------------
-int main(void) {
-//---------------------------------------------------------------------------------
-	touchPosition touchXY;
+int main(int argc, char *argv[])
+{
+    // Initialize sound hardware
+    enableSound();
 
-	irqSet(IRQ_VBLANK, Vblank); // Set up VBlank interrupt
-    irqSet(IRQ_TIMER0, countFPS); // Set up Timer0 interrupt for FPS counting
-    irqEnable(IRQ_VBLANK | IRQ_TIMER0);  // Enable VBlank and Timer0 interrupts
+    // Read user information from the firmware (name, birthday, etc)
+    readUserSettings();
 
-	consoleDemoInit();
+    // Stop LED blinking
+    ledBlink(LED_ALWAYS_ON);
 
-	iprintf("\x1b[0;0HTesting Application\x1b[39m\n");
+    // Using the calibration values read from the firmware with
+    // readUserSettings(), calculate some internal values to convert raw
+    // coordinates into screen coordinates.
+    touchInit();
 
-	timerStart(0, ClockDivider_1024, TIMER_FREQ_1024(1), countFPS);
+    irqInit();
+    fifoInit();
 
-	setBackdropColor(RGB15(255,128,0))
+    installSoundFIFO();
+    installSystemFIFO(); // Sleep mode, storage, firmware...
+    installWifiFIFO();
+    if (isDSiMode())
+        installCameraFIFO();
 
-	while(pmMainLoop()) {
+    // Initialize Maxmod. It uses timer 0 internally.
+    mmInstall(FIFO_MAXMOD);
 
-		swiWaitForVBlank();
+    // This sets a callback that is called when the power button in a DSi
+    // console is pressed. It has no effect in a DS.
+    setPowerButtonCB(power_button_callback);
 
-		scanKeys();
-		int keys = keysDown();
-		if (keys & KEY_START) break;
+    // Read current date from the RTC and setup an interrupt to update the time
+    // regularly. The interrupt simply adds one second every time, it doesn't
+    // read the date. Reading the RTC is very slow, so it's a bad idea to do it
+    // frequently.
+    initClockIRQTimer(3);
 
-		touchRead(&touchXY);
+    // Now that the FIFO is setup we can start sending input data to the ARM9.
+    irqSet(IRQ_VBLANK, vblank_handler);
+    irqEnable(IRQ_VBLANK);
 
-		// print at using ansi escape sequence \x1b[line;columnH
-		iprintf("\x1b[2;0H\x1b[2KTouch point = (%d, %d)\n", touchXY.rawx, touchXY.rawy);
-		iprintf("\x1b[3;0H\x1b[2KTouch pixel = (%d px, %d px)\n", touchXY.px, touchXY.py);
+    while (!exit_loop)
+    {
+        const uint16_t key_mask = KEY_SELECT | KEY_START | KEY_L | KEY_R;
+        uint16_t keys_pressed = ~REG_KEYINPUT;
 
-		// Print FPS to the console
-		iprintf("\x1b[4;0HFPS = %02d", fps);
+        if ((keys_pressed & key_mask) == key_mask)
+            exit_loop = true;
 
-		// Print the time elapsed to the console
-		iprintf("\x1b[5;0HTime Elapsed: %02d:%02d:%02d\x1b[39m\n", elapsedSeconds/3600, (elapsedSeconds/60) % 60, elapsedSeconds % 60);
-		if (elapsedSeconds > 60) {
-			iprintf("\x1b[6;0HSeconds Elapsed: %d\x1b[39m\n", elapsedSeconds);
-		}
-	}
+        swiWaitForVBlank();
+    }
 
-	return 0;
+    return 0;
 }
