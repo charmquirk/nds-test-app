@@ -1,42 +1,31 @@
 {
     "configurations": [
         {
-            "name": "NDS",
+            "name": "Windows",
+            "defines": [],
             "includePath": [
-                "${workspaceFolder}",
                 "${workspaceFolder}/**",
-                // "${workspaceFolder}/libs/**",
-                "C:/devkitPro/devkitARM/arm-none-eabi/include/**",
-                "C:/devkitPro/calico/include/**",
-                "C:/devkitpro/libnds/include",
-                "C:/devkitpro/libnds/include/**"
-                // "C:/devkitpro/nitro-engine/include/**",
-                // "C:/devkitpro/nflib/include/**"
+                "C:/msys64/opt/wonderful/thirdparty/blocksds/core/libs/dswifi/include/**",
+                "C:/msys64/opt/wonderful/thirdparty/blocksds/core/libs/libnds/include/**",
+                "C:/msys64/opt/wonderful/thirdparty/blocksds/core/libs/libxm7/include/**",
+                "C:/msys64/opt/wonderful/thirdparty/blocksds/core/libs/maxmod/include/**",
+                "C:/msys64/opt/wonderful/thirdparty/blocksds/external/nflib/include/**",
+                // "C:/msys64/opt/wonderful/thirdparty/blocksds/core/templates/**/include/**",
+                "C:/msys64/opt/wonderful/thirdparty/blocksds/external/nitro-engine/include/**",
+                "C:/msys64/opt/wonderful/toolchain/gcc-arm-none-eabi/arm-none-eabi/include/**",
+                "C:/msys64/opt/wonderful/toolchain/gcc-arm-none-eabi/include" // Empty
             ],
-            "defines": [
-                "__nds__",
-                "_DEBUG",
-                "_UNICODE",
-                "WIN32",
-                "ARM7",
-                "ARM9"
-            ],
+            "intelliSenseMode": "gcc-arm",
+            "compilerPath": "C:/msys64/opt/wonderful/toolchain/gcc-arm-none-eabi/bin/arm-none-eabi-gcc.exe",
+            "cStandard": "gnu11",
+            "cppStandard": "gnu++14",
             "browse": {
                 "path": [
-                    "${workspaceFolder}",
-                    // "${workspaceFolder}/libs/**",
-                    "C:/devkitPro/devkitARM/arm-none-eabi/include/**",
-                    // "C:/devkitPro/calico/include/**",
-                    "C:/devkitpro/libnds/include/**"
-                    // "C:/devkitpro/nitro-engine/include/**",
-                    // "C:/devkitpro/nflib/include/**"
+                    "C:/msys64/opt/wonderful/thirdparty/blocksds/core/sys",
+                    "C:/msys64/opt/wonderful/thirdparty/blocksds/core/libs"
                 ],
-                "limitSymbolsToIncludedHeaders": true,
-                "databaseFilename": ""
-            },
-            "cStandard": "c11",
-            "cppStandard": "c++11",
-            "compilerPath": "C:/devkitpro/devkitARM/bin/arm-none-eabi-g++.exe"
+                "limitSymbolsToIncludedHeaders": false
+            }
         }
     ],
     "version": 4
