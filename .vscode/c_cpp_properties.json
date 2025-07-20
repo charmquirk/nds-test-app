@@ -18,14 +18,7 @@
             "intelliSenseMode": "gcc-arm",
             "compilerPath": "C:/msys64/opt/wonderful/toolchain/gcc-arm-none-eabi/bin/arm-none-eabi-gcc.exe",
             "cStandard": "gnu11",
-            "cppStandard": "gnu++14",
-            "browse": {
-                "path": [
-                    "C:/msys64/opt/wonderful/thirdparty/blocksds/core/sys",
-                    "C:/msys64/opt/wonderful/thirdparty/blocksds/core/libs"
-                ],
-                "limitSymbolsToIncludedHeaders": false
-            }
+            "cppStandard": "gnu++14"
         }
     ],
     "version": 4
