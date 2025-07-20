@@ -7,22 +7,12 @@
 
 // Default ARM7 core
 
-#include <math.h>
-#include <stdio.h>
-
 #include <dswifi7.h>
 #include <nds.h>
 #include <maxmod7.h>
 
-/*
-Whether or not the app should exit the main loop.
-It is triggered on by opening the app and triggered off by pressing the power button or "Start".
-*/
-volatile bool exit_loop = false; 
+volatile bool exit_loop = false;
 
-/**
-* @brief Callback function fo the power button. Exits the main loop.
-*/
 void power_button_callback(void)
 {
     exit_loop = true;
