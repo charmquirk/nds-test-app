@@ -1,7 +1,7 @@
 {
     "configurations": [
         {
-            "name": "Windows",
+            "name": "BlocksDS",
             "defines": [],
             "includePath": [
                 "${workspaceFolder}/**",
@@ -12,8 +12,7 @@
                 "C:/msys64/opt/wonderful/thirdparty/blocksds/external/nflib/include/**",
                 // "C:/msys64/opt/wonderful/thirdparty/blocksds/core/templates/**/include/**",
                 "C:/msys64/opt/wonderful/thirdparty/blocksds/external/nitro-engine/include/**",
-                "C:/msys64/opt/wonderful/toolchain/gcc-arm-none-eabi/arm-none-eabi/include/**",
-                "C:/msys64/opt/wonderful/toolchain/gcc-arm-none-eabi/include" // Empty
+                "C:/msys64/opt/wonderful/toolchain/gcc-arm-none-eabi/arm-none-eabi/include/**"
             ],
             "intelliSenseMode": "gcc-arm",
             "compilerPath": "C:/msys64/opt/wonderful/toolchain/gcc-arm-none-eabi/bin/arm-none-eabi-gcc.exe",
