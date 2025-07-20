@@ -2,18 +2,25 @@
 #
 # SPDX-FileContributor: Antonio Niño Díaz, 2023
 
-BLOCKSDS	?= /opt/blocksds/core
-BLOCKSDSEXT	?= /opt/blocksds/external
+ifeq ($(OS),Windows_NT)
+BLOCKSDS            ?= C:/msys64/opt/wonderful/thirdparty/blocksds/core
+BLOCKSDSEXT         ?= C:/msys64/opt/wonderful/thirdparty/blocksds/external
+WONDERFUL_TOOLCHAIN ?= C:/msys64/opt/wonderful
+else
+BLOCKSDS            ?= /opt/blocksds/core
+BLOCKSDSEXT			?= /opt/blocksds/external
+endif
 
 # User config
 # ===========
 
-NAME		:= nds_test_app
-
-GAME_TITLE	:= NDS Test App
+NAME			:= nds_test_app
+GAME_TITLE		:= NDS Test App
 GAME_SUBTITLE	:= For Developers
-GAME_AUTHOR	:= Charm Quirk
-GAME_ICON	:= icon.bmp
+GAME_AUTHOR		:= Charm Quirk
+GAME_ICON		:= icon.bmp
+
+include $(BLOCKSDS)/sys/default_makefiles/rom_arm9arm7/Makefile
 
 # DLDI and internal SD slot of DSi
 # --------------------------------
